@@ -10,10 +10,10 @@ Deployment steps:
 
 2. Configure rules of ad selection in the table 'ad_selector_rules' and create ads in the table 'advertisement'.
  
-3. Build the project using maven and deploy on a web container like Tomcat on a server with hostname 'adnetwork.api'. Register partner URLs with the application using the rest endpoint <HOST>/adnetwork/register. 
+3. Build the project using maven and deploy on a web container like Tomcat on a server with hostname 'adnetwork.api'. Register partner URLs with the application using the rest endpoint {HOST}/adnetwork/register. 
 
 4. On the partner site, insert the html listed in the file 'partner-integration-snippet.html'.
 
-5. You can see the number of impressions and clicks for a URL u on the endpoint <HOST>/adnetwork/dashboard?pageUrl=<u>
+5. You can see the number of impressions and clicks for a URL u on the endpoint {HOST}/adnetwork/dashboard?pageUrl={u}
 
 _[1] Jenny Rose Finkel, Trond Grenager, and Christopher Manning. 2005. Incorporating Non-local Information into Information Extraction Systems by Gibbs Sampling. Proceedings of the 43nd Annual Meeting of the Association for Computational Linguistics (ACL 2005), pp. 363-370._

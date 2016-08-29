@@ -14,4 +14,6 @@ Deployment steps:
 
 4. On the partner site, insert the html listed in the file 'partner-integration-snippet.html'.
 
+5. You can see the number of impressions and clicks for a URL u on the endpoint <HOST>/adnetwork/dashboard?pageUrl=<u>
+
 _[1] Jenny Rose Finkel, Trond Grenager, and Christopher Manning. 2005. Incorporating Non-local Information into Information Extraction Systems by Gibbs Sampling. Proceedings of the 43nd Annual Meeting of the Association for Computational Linguistics (ACL 2005), pp. 363-370._

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="adnetwork">
+		<class>com.zafar.adnetwork.model.PartnerInfo</class>
+		<class>com.zafar.adnetwork.model.TravelType</class>
+		<class>com.zafar.adnetwork.model.AdSelectorRule</class>
+		<class>com.zafar.adnetwork.model.AdSelectorRulePK</class>
+		<class>com.zafar.adnetwork.model.CrawledInfo</class>
+		<class>com.zafar.adnetwork.model.PartnerUrl</class>
+		<class>com.zafar.adnetwork.model.City</class>
+		<class>com.zafar.adnetwork.model.Advertisement</class>
+		<class>com.zafar.adnetwork.model.Dashboard</class>
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://172.16.43.123:3306/affiliate_engine_api" />
+			<property name="javax.persistence.jdbc.user" value="mmtweb1" />
+			<property name="javax.persistence.jdbc.password" value="p@55word" />
+		</properties>
+	</persistence-unit>
+</persistence>

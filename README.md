@@ -10,7 +10,7 @@ Deployment steps:
 
 2. Configure rules of ad selection in the table 'ad_selector_rules' and create ads in the table 'advertisement'.
  
-3. Build the project using maven and deploy on a web container like Tomcat on a server with hostname 'adnetwork.api'.
+3. Build the project using maven and deploy on a web container like Tomcat on a server with hostname 'adnetwork.api'. Register partner URLs with the application using the rest endpoint <HOST>/adnetwork/register. 
 
 4. On the partner site, insert the html listed in the file 'partner-integration-snippet.html'.
 

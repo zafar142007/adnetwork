@@ -1,9 +1,4 @@
--- --------------------------------------------------------
--- Host:                         172.16.43.123
--- Server version:               5.6.19-enterprise-commercial-advanced-log - MySQL Enterprise Server - Advanced Edition (Commercial)
--- Server OS:                    Linux
--- HeidiSQL Version:             9.3.0.4984
--- --------------------------------------------------------
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8mb4 */;

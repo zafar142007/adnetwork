@@ -14,9 +14,9 @@
 		<class>com.zafar.adnetwork.model.Dashboard</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://172.16.43.123:3306/affiliate_engine_api" />
-			<property name="javax.persistence.jdbc.user" value="mmtweb1" />
-			<property name="javax.persistence.jdbc.password" value="p@55word" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://database.mysql:3306/affiliate_engine_api" />
+			<property name="javax.persistence.jdbc.user" value="user" />
+			<property name="javax.persistence.jdbc.password" value="pass" />
 		</properties>
 	</persistence-unit>
 </persistence>

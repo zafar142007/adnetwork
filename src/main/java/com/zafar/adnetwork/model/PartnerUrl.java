@@ -20,6 +20,18 @@ public class PartnerUrl implements Serializable {
 
 	@Column(name="partner_id")
 	private int partnerId;
+	
+	@Column(name="crawl_period")
+	private int crawlPeriod;
+
+	public int getCrawlPeriod() {
+		return crawlPeriod;
+	}
+
+
+	public void setCrawlPeriod(int crawlPeriod) {
+		this.crawlPeriod = crawlPeriod;
+	}
 
 	@Id
 	@Column(name="partner_url")

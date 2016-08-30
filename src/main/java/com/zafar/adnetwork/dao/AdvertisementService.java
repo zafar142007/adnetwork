@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import rx.Observable;
+import rx.functions.Action1;
 
 import com.zafar.adnetwork.domain.Response;
 import com.zafar.adnetwork.executors.ExecutorUtilImpl;
@@ -65,6 +66,10 @@ public class AdvertisementService {
 	public void init(){
 		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("adnetwork");
 		manager = emfactory.createEntityManager();
+		List<PartnerUrl> list=manager.createNamedQuery("PartnerUrl.findAll").getResultList();
+		for(PartnerUrl s:list){
+			subscribeCrawl(s.getPartnerUrl(), s.getCrawlPeriod());
+		}
 	}
 	public DeferredResult<String> getAd(String url) {
 		DeferredResult<String> ads=util.emptyStringResponseWithTimeout();
@@ -131,26 +136,24 @@ public class AdvertisementService {
 				pu.setDefaultAdId(defaultAdId);
 				pu.setPartnerId(partnerId);
 				pu.setPartnerUrl(u);
+				pu.setCrawlPeriod(defaultCrawlPeriod);
 				manager.getTransaction().begin();
 				manager.persist(pu);
 				manager.getTransaction().commit();
 
-				subscribeCrawl(u);
+				subscribeCrawl(u,defaultCrawlPeriod);
 			}			
 		}
 		
 		
 	}
-	public void subscribeCrawl(String u){
-		Observable.just(u).delay(defaultCrawlPeriod, TimeUnit.SECONDS,executors.getWriteExecutors()).subscribe(
-				(urlToCrawl)->{
-					crawl(u);
-		//			subscribeCrawl(u);			
-				},
-				(exception)->{
-					
-				}
-			);
+
+	public void subscribeCrawl(String u, int period){
+		Act<Long> act=new Act<>();
+		act.url=u;
+		act.service=this;
+		Observable.interval(0l, period, TimeUnit.SECONDS).
+			subscribeOn(executors.getWriteExecutors()).subscribe((Action1<Long>)act);
 	}
 	public void crawl(String url) {
 		try {
@@ -159,13 +162,21 @@ public class AdvertisementService {
 	        Set<String> travelTypes=stanfordNLP.findTravelTypes(text);
 	        Set<String>  places=stanfordNLP.findPlaces(text);
 	        String metaTags= extractFromMetaTags(doc);
-	        //store in DB
+	        //replace in DB
+	        remove(url);
 	        store(url,travelTypes, places, metaTags);
 	        
 		} catch (Exception e) {
 			logger.error("Oops",e);
 		}
 			
+	}
+	private void remove(String url) {
+		CrawledInfo record=manager.find(CrawledInfo.class,url);
+		manager.getTransaction().begin();
+		if(record!=null)
+			manager.remove(record);
+		manager.getTransaction().commit();
 	}
 	private void store(String url, Set<String> travelTypes, Set<String> places,
 			String metaTags) {
@@ -174,7 +185,6 @@ public class AdvertisementService {
 		crawled.setOtherKeywords(metaTags);
 		crawled.setPageId(url);
 		crawled.setTravelTypeIds(concatenate(travelTypes));
-		crawled.setCrawlPeriod(new Time(defaultCrawlPeriod*1000));
 		manager.getTransaction().begin();
 		manager.persist(crawled);
 		manager.getTransaction().commit();
@@ -212,17 +222,24 @@ public class AdvertisementService {
 	
 	private String concat(Set<Integer> strings){
 		StringBuffer buf=new StringBuffer();
-		for(Integer s:strings){
-			buf.append(s).append(",");
+		if(strings.size()!=0)
+		{	
+			for(Integer s:strings){
+				buf.append(s).append(",");
+			}
+			return buf.substring(0, buf.length()-1);
 		}
-		return buf.substring(0, buf.length()-1);
+		else return "";
 	}
 	private String concatenate(Set<String> strings){
 		StringBuffer buf=new StringBuffer();
-		for(String s:strings){
-			buf.append(s).append(Constants.CITY_DELIMITER);
+		if(strings.size()!=0){
+			for(String s:strings){
+				buf.append(s).append(Constants.CITY_DELIMITER);
+			}
+			return buf.substring(0, buf.length()-1);
 		}
-		return buf.substring(0, buf.length()-1);
+		else return "";
 	}
 	private String extractFromMetaTags(Document doc) {
 		Elements elements=doc.getElementsByTag("meta");
@@ -268,4 +285,12 @@ public class AdvertisementService {
 		}
 
 	}
+}
+class Act<T> implements Action1<T> {
+	
+	public AdvertisementService service;
+	public String url;
+    public void call(T t){
+    	service.crawl(url);
+    }
 }

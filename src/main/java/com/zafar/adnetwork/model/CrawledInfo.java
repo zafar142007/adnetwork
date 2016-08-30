@@ -23,9 +23,6 @@ public class CrawledInfo implements Serializable {
 	@Column(name="city_names")
 	private String cityNames;
 
-	@Column(name="crawl_period")
-	private Time crawlPeriod;
-
 	@Column(name="other_keywords")
 	private String otherKeywords;
 
@@ -58,14 +55,6 @@ public class CrawledInfo implements Serializable {
 
 	public void setCityNames(String cityNames) {
 		this.cityNames = cityNames;
-	}
-
-	public Time getCrawlPeriod() {
-		return this.crawlPeriod;
-	}
-
-	public void setCrawlPeriod(Time crawlPeriod) {
-		this.crawlPeriod = crawlPeriod;
 	}
 
 	public String getOtherKeywords() {

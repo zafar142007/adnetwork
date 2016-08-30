@@ -22,7 +22,7 @@ public class Advertisement implements Serializable {
 	private static final long serialVersionUID = 2L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ad_id")
 	private int adId;
 

@@ -78,7 +78,6 @@ CREATE TABLE IF NOT EXISTS `crawled_info` (
   `city_names` varchar(500) DEFAULT NULL COMMENT '_separated city names',
   `other_keywords` varchar(500) DEFAULT NULL COMMENT '_separated other keywords',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `crawl_period` time NOT NULL DEFAULT '00:00:00',
   PRIMARY KEY (`page_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -127,6 +126,7 @@ CREATE TABLE IF NOT EXISTS `partner_urls` (
   `partner_id` int(11) NOT NULL,
   `partner_url` varchar(200) NOT NULL,
   `default_ad_id` int(11) NOT NULL,
+  `crawl_period` INT(11) NOT NULL DEFAULT '300' COMMENT 'crawl period in sec',
   PRIMARY KEY (`partner_url`),
   KEY `FK_partner_urls_partner_info` (`partner_id`),
   KEY `FK_partner_urls_advertisement` (`default_ad_id`),

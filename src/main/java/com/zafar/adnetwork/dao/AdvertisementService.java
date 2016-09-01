@@ -1,8 +1,9 @@
 package com.zafar.adnetwork.dao;
 
-import java.sql.Time;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.functions.Action1;
 
 import com.zafar.adnetwork.domain.Response;
@@ -43,6 +45,8 @@ import com.zafar.adnetwork.util.Utilities;
 public class AdvertisementService {
 
 	private EntityManager manager;
+	
+	private Map<String, Subscription> subscriptions=new HashMap<>();
 	
 	@Value("${crawl.time.period.s:300}")
 	private int defaultCrawlPeriod;
@@ -152,9 +156,11 @@ public class AdvertisementService {
 		Act<Long> act=new Act<>();
 		act.url=u;
 		act.service=this;
-		Observable.interval(0l, period, TimeUnit.SECONDS).
-			subscribeOn(executors.getWriteExecutors()).subscribe((Action1<Long>)act);
+		Subscription subs=Observable.interval(0l, period, TimeUnit.SECONDS).
+				subscribeOn(executors.getWriteExecutors()).subscribe((Action1<Long>)act);
+		subscriptions.put(u,subs);
 	}
+	
 	public void crawl(String url) {
 		try {
 			Document doc = Jsoup.connect(url).get();
@@ -171,7 +177,7 @@ public class AdvertisementService {
 		}
 			
 	}
-	private void remove(String url) {
+	public void remove(String url) {
 		CrawledInfo record=manager.find(CrawledInfo.class,url);
 		manager.getTransaction().begin();
 		if(record!=null)
@@ -284,6 +290,19 @@ public class AdvertisementService {
 			manager.getTransaction().commit();
 		}
 
+	}
+	public void deregister(String url) {
+		CrawledInfo record=manager.find(CrawledInfo.class,url);
+		PartnerUrl u=manager.find(PartnerUrl.class, url);
+		
+		manager.getTransaction().begin();
+		if(record!=null)
+			manager.remove(record);
+		if(u!=null)
+			manager.remove(u);
+		subscriptions.remove(url).unsubscribe();
+		manager.getTransaction().commit();
+			
 	}
 }
 class Act<T> implements Action1<T> {

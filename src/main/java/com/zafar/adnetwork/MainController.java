@@ -45,6 +45,12 @@ public class MainController {
 		service.crawl(url);
 		return Constants.DONE;
 	}
+	@RequestMapping(value = "/remove", method = RequestMethod.GET)
+	public String removeUrl(ModelMap model, HttpServletRequest request) {
+		String url = request.getParameter("pageUrl");
+		service.deregister(url);
+		return Constants.DONE;
+	}
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
 	public String dash(ModelMap model, HttpServletRequest request) {
 		String url = request.getParameter("pageUrl");
